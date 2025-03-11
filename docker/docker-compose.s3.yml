@@ -16,6 +16,8 @@ services:
       retries: 5
     volumes:
       - ./volumes/storage:/data:z
+    restart:
+      always
 
   minio-createbucket:
     image: minio/mc
