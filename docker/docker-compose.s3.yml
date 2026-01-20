@@ -15,7 +15,7 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - ./volumes/storage:/data
+      - ./volumes/storage:/data:z
     restart:
       always
 
@@ -80,7 +80,7 @@ services:
       ENABLE_IMAGE_TRANSFORMATION: "true"
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
-      - ./volumes/storage:/var/lib/storage
+      - ./volumes/storage:/var/lib/storage:z
 
   imgproxy:
     container_name: supabase-imgproxy
