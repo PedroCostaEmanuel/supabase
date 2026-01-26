@@ -1,8 +1,8 @@
 services:
 
   minio:
-    # Pin to older version to avoid "drive not found" issues with newer releases
-    image: minio/minio:RELEASE.2024-01-16T16-07-38Z
+    # Use latest version - older versions have compatibility issues with Multipass VMs
+    image: minio/minio:latest
     container_name: supabase-minio
     ports:
       - '9000:9000'
@@ -12,24 +12,23 @@ services:
       MINIO_ROOT_PASSWORD: secret1234
     command: server --console-address ":9001" /data
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: [ "CMD", "curl", "-f", "http://minio:9000/minio/health/live" ]
       interval: 2s
       timeout: 10s
       retries: 5
     volumes:
-      - ./volumes/storage:/data
-    restart:
-      always
+      - ./volumes/minio:/data:z
+    restart: unless-stopped
 
   minio-createbucket:
-    image: minio/mc
+    image: minio/mc:latest
     depends_on:
       minio:
         condition: service_healthy
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set supa-minio http://minio:9000 supa-storage secret1234;
-      /usr/bin/mc mb supa-minio/stub;
+      /usr/bin/mc mb supa-minio/stub --ignore-existing;
       exit 0;
       "
 
@@ -82,7 +81,7 @@ services:
       ENABLE_IMAGE_TRANSFORMATION: "true"
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
-      - ./volumes/storage:/var/lib/storage
+      - ./volumes/storage:/var/lib/storage:z
 
   imgproxy:
     container_name: supabase-imgproxy
