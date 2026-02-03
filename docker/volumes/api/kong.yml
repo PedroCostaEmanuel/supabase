@@ -184,17 +184,17 @@ services:
     plugins:
       - name: cors
 
-  ## Edge Functions routes
-  - name: functions-v1
-    _comment: 'Edge Functions: /functions/v1/* -> http://functions:9000/*'
-    url: http://functions:9000/
-    routes:
-      - name: functions-v1-all
-        strip_path: true
-        paths:
-          - /functions/v1/
-    plugins:
-      - name: cors
+  ## Edge Functions routes - Disabled (not used in this project)
+  # - name: functions-v1
+  #   _comment: 'Edge Functions: /functions/v1/* -> http://functions:9000/*'
+  #   url: http://functions:9000/
+  #   routes:
+  #     - name: functions-v1-all
+  #       strip_path: true
+  #       paths:
+  #         - /functions/v1/
+  #   plugins:
+  #     - name: cors
 
   ## Analytics routes
   - name: analytics-v1
